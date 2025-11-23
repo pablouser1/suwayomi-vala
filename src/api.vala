@@ -11,7 +11,7 @@ public class Api {
     }
 
     public async Gee.List<CategoryType> categories() throws Error {
-        var query = @"
+        var categories_query = @"
         query AllCategories {
           categories(orderBy: ORDER) {
             nodes {
@@ -22,7 +22,7 @@ public class Api {
         }
         ";
 
-        var root_node = yield this.graphql(query);
+        var root_node = yield this.graphql(categories_query);
 
         var data = this.data_from_res(root_node);
 
@@ -47,6 +47,53 @@ public class Api {
         return category_list;
     }
 
+    public async Gee.List<MangaType> mangas_from_category(int64 category_id) throws Error {
+        var mangas_query = @"
+        query MangasFromCategories($$condition: MangaConditionInput) {
+          mangas(condition: $$condition) {
+            nodes {
+              id
+              title
+              thumbnailUrl
+            }
+          }
+        }
+        ";
+
+        var ids = new Json.Array();
+        ids.add_int_element(category_id);
+        var condition = new Json.Object();
+        condition.set_boolean_member("inLibrary", true);
+        condition.set_array_member("categoryIds", ids);
+
+        var variables = new Json.Object();
+        variables.set_object_member("condition", condition);
+
+        var root_node = yield this.graphql(mangas_query, variables);
+        var data = this.data_from_res(root_node);
+
+        var mangas_obj = data.get_object_member("mangas");
+        var nodes_array = mangas_obj.get_array_member("nodes");
+
+        // Get mangas
+        Gee.List<MangaType> manga_list = new Gee.ArrayList<MangaType> ();
+        for (int i = 0; i < nodes_array.get_length(); i++) {
+            Json.Object category_obj = nodes_array.get_element(i).get_object();
+
+            var id = category_obj.get_int_member("id");
+            var title = category_obj.get_string_member("title");
+            var thumbnailUrl = category_obj.get_string_member("thumbnailUrl");
+
+            // Create the new CategoryType using the corrected constructor
+            var manga = new MangaType(id, title, thumbnailUrl);
+
+            // GLib.List requires reassignment when appending
+            manga_list.add(manga);
+        }
+
+        return manga_list;
+    }
+
     private async Json.Node graphql(string query, Json.Object? variables = null) throws Error {
         // Build final JSON
         Json.Builder builder = new Json.Builder();
@@ -56,7 +103,9 @@ public class Api {
 
         if (variables != null) {
             builder.set_member_name("variables");
-            builder.add_value((Json.Node) variables);
+            var variables_node = new Json.Node(Json.NodeType.OBJECT);
+            variables_node.set_object(variables);
+            builder.add_value(variables_node);
         }
 
         builder.end_object();
@@ -72,7 +121,7 @@ public class Api {
 
         // Handle auth
         if (this.username != null && this.password != null) {
-            string auth_header = this.encode_basic_auth("pablouser1", "iAzztD&V$eK~4jS7#b5r");
+            string auth_header = this.encode_basic_auth(this.username, this.password);
             message.request_headers.append("Authorization", auth_header);
         }
 
