@@ -1,12 +1,12 @@
 project(
-    'Example',
+    'Suwayomi',
 
     ['c', 'vala'],
     version: '1.0',
     meson_version: '>= 1.0',
 )
 
-id = 'org.gtk.Example'
+id = 'es.pablouser1.suwayomi'
 name = meson.project_name()
 version = meson.project_version()
 output = name.to_lower()

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <gresources>
-    <gresource prefix="/org/gtk/Example">
+    <gresource prefix="/es/pablouser1/suwayomi">
         <!-- Interface -->
         <file alias="main-window.ui" preprocess="xml-stripblanks">ui/main-window.ui</file>
     </gresource>

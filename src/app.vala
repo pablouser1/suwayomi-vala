@@ -1,11 +1,11 @@
-public class Example : Adw.Application {
+public class App : Adw.Application {
     public MainWindow main_window;
 
-    private static Example _instance;
-    public static Example instance {
+    private static App _instance;
+    public static App instance {
         get {
             if (_instance == null)
-                _instance = new Example();
+                _instance = new App();
 
             return _instance;
         }
@@ -28,7 +28,7 @@ public class Example : Adw.Application {
     }
 
     public static int main(string[] args) {
-        var app = Example.instance;
+        var app = App.instance;
         return app.run(args);
     }
 }
