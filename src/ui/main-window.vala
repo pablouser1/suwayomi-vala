@@ -45,12 +45,16 @@ public class MainWindow : Adw.ApplicationWindow {
                 var picture = new Gtk.Picture();
                 picture.set_size_request(100, 300);
                 picture.set_content_fit(Gtk.ContentFit.SCALE_DOWN);
+                box.append(picture);
+
+                var label = new Gtk.Label(manga.title);
+                label.set_max_width_chars(25);
+                label.set_ellipsize(Pango.EllipsizeMode.END);
+                box.append(label);
                 try {
                     var bytes = yield api.image(manga.thumbnailUrl);
                     var texture = Gdk.Texture.from_bytes(bytes);
                     picture.set_paintable(texture);
-                    box.append(picture);
-                    box.append(new Gtk.Label(manga.title));
                     tab.child.append(box);
                 } catch (Error e) {
                     this.toastOverlay.add_toast(new Adw.Toast(e.message));
