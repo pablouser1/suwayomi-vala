@@ -11,7 +11,9 @@ template $MainWindow: Adw.ApplicationWindow {
             [top]
             Adw.HeaderBar {}
 
-            Adw.ViewStack viewStack {}
+            ScrolledWindow {
+              Adw.ViewStack viewStack {}
+            }
 
             [bottom]
             Adw.ViewSwitcher {

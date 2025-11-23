@@ -13,7 +13,9 @@ public class Api {
     public async Gee.List<CategoryType> categories() throws Error {
         var categories_query = @"
         query AllCategories {
-          categories(orderBy: ORDER) {
+          categories(orderBy: ORDER, condition: {
+            default: false
+          }) {
             nodes {
               id
               name
@@ -149,6 +151,28 @@ public class Api {
         }
 
         return response_parser.get_root();
+    }
+
+    public async Bytes image(string path) throws Error {
+        var message = new Soup.Message("GET", this.baseUrl + path);
+        // Handle auth
+        if (this.username != null && this.password != null) {
+            string auth_header = this.encode_basic_auth(this.username, this.password);
+            message.request_headers.append("Authorization", auth_header);
+        }
+
+        Bytes? bytes = yield this.session.send_and_read_async(message, 0, null);
+
+        if (message.get_status() != Soup.Status.OK) {
+            throw new Error(Soup.SessionError.quark(), 1, "HTTP Error %u: %s",
+                            message.get_status(), message.get_reason_phrase());
+        }
+
+        if (bytes == null) {
+            throw new Error(Quark.from_string("Could not get data"), 0, "Body error");
+        }
+
+        return bytes;
     }
 
     private Json.Object data_from_res(Json.Node root) throws Error {

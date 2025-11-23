@@ -37,6 +37,7 @@ public class App : Adw.Application {
     }
 
     public static int main(string[] args) {
+        Intl.setlocale();
         var app = App.instance;
         return app.run(args);
     }

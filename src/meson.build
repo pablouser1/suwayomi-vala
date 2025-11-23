@@ -1,4 +1,5 @@
 deps = [
+    dependency('gtk4'),
     dependency('libadwaita-1'),
     dependency('libsoup-3.0'),
     dependency('json-glib-1.0'),

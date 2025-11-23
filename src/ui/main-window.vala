@@ -22,7 +22,7 @@ public class MainWindow : Adw.ApplicationWindow {
             var categories = yield this.api.categories();
 
             foreach (var category in categories) {
-                var container = new Gtk.Box(Gtk.Orientation.HORIZONTAL, 10);
+                var container = new Gtk.FlowBox();
 
                 this.tabs.set(category.id.to_string(), new Tab(category.id, container));
                 this.viewStack.add_titled(
@@ -39,8 +39,26 @@ public class MainWindow : Adw.ApplicationWindow {
     private async void fetch_mangas_from_category(Tab tab) {
         try {
             var mangas_category = yield this.api.mangas_from_category(tab.id);
-            print("Appending %s", mangas_category.first().title);
-            tab.child.append(new Gtk.Label(mangas_category.first().title));
+
+            foreach (var manga in mangas_category) {
+                var box = new Gtk.Box(Gtk.Orientation.VERTICAL, 10);
+                var picture = new Gtk.Picture();
+                picture.set_size_request(100, 300);
+                picture.set_content_fit(Gtk.ContentFit.SCALE_DOWN);
+                try {
+                    var bytes = yield api.image(manga.thumbnailUrl);
+                    var texture = Gdk.Texture.from_bytes(bytes);
+                    picture.set_paintable(texture);
+                    box.append(picture);
+                    box.append(new Gtk.Label(manga.title));
+                    tab.child.append(box);
+                } catch (Error e) {
+                    this.toastOverlay.add_toast(new Adw.Toast(e.message));
+                    picture.set_paintable(null);
+                }
+            }
+
+            tab.fetched = true;
         } catch (Error e) {
             this.toastOverlay.add_toast(new Adw.Toast(e.message));
         }
@@ -58,7 +76,6 @@ public class MainWindow : Adw.ApplicationWindow {
 
                 if (!tab.fetched) {
                    this.fetch_mangas_from_category.begin(tab);
-                   tab.fetched = true;
                 }
             }
         }
