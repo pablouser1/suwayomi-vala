@@ -1,28 +1,20 @@
 using Gtk 4.0;
 using Adw 1;
 
-template $MainWindow : Adw.ApplicationWindow {
-    title: "Example";
+template $MainWindow: Adw.ApplicationWindow {
+    title: "Suwayomi";
     default-width: 400;
     default-height: 350;
 
     Adw.ToolbarView {
-
         [top]
-        Adw.HeaderBar {}
-
-        Box {
-            orientation: vertical;
-            halign: center;
-            valign: center;
-            hexpand: true;
-            vexpand: true;
-
-            Label {
-                styles ["title-1"]
-                label: "Hello, world!";
-            }
+        Adw.HeaderBar {
+            title-widget: Adw.ViewSwitcher {
+                stack: viewStack;
+                policy: wide;
+            };
         }
+
+        Adw.ViewStack viewStack {}
     }
 }
-

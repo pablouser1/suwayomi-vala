@@ -1,8 +1,12 @@
 deps = [
-    dependency('libadwaita-1')
+    dependency('libadwaita-1'),
+    dependency('libsoup-3.0'),
+    dependency('json-glib-1.0'),
+    dependency('gee-0.8'),
 ]
 
 sources = files(
+    'api.vala',
     'app.vala',
 ) + configure_file(
     input: 'build.vala.in',
@@ -10,6 +14,7 @@ sources = files(
     configuration: config
 )
 
+subdir('models')
 subdir('ui')
 
 app = executable(
