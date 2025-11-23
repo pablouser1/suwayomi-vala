@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schemalist>
+    <schema id="es.pablouser1.suwayomi" path="/es/pablouser1/suwayomi/"
+        gettext-domain="suwayomi">
+        <key name="url" type="s">
+            <default>'http://localhost:4567'</default>
+            <summary>Suwayomi Base URL</summary>
+            <description>URL of Suwayomi server.</description>
+        </key>
+        <key name="username" type="s">
+            <default>''</default>
+            <summary>Suwayomi Username</summary>
+            <description>Username for accessing the GraphQL API.</description>
+        </key>
+        <key name="password" type="s">
+            <default>''</default>
+            <summary>Suwayomi Password</summary>
+            <description>Password for accessing the GraphQL API.</description>
+        </key>
+    </schema>
+</schemalist>

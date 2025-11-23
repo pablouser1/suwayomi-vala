@@ -1,5 +1,7 @@
 public class App : Adw.Application {
     public MainWindow main_window;
+    public Settings settings;
+    public Api api;
 
     private static App _instance;
     public static App instance {
@@ -22,7 +24,14 @@ public class App : Adw.Application {
             return;
         }
 
-        main_window = new MainWindow(this);
+        this.settings = new Settings(Build.ID);
+        var baseUrl = settings.get_string ("url");
+        var username = this.get_optional_string ("username");
+        var password = this.get_optional_string ("password");
+
+        this.api = new Api(baseUrl, username, password);
+
+        main_window = new MainWindow(this.api, this);
 
         main_window.present();
     }
@@ -30,5 +39,10 @@ public class App : Adw.Application {
     public static int main(string[] args) {
         var app = App.instance;
         return app.run(args);
+    }
+
+    private string ? get_optional_string(string key) {
+        string value = this.settings.get_string(key);
+        return value == "" ? null : value;
     }
 }

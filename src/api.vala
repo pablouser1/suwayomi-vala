@@ -1,11 +1,10 @@
-class Api {
-    private Soup.Session session;
+public class Api {
+    private Soup.Session session = new Soup.Session();
     private string baseUrl;
     private string? username;
     private string? password;
 
     public Api(string baseUrl, string? username, string? password) {
-        this.session = new Soup.Session();
         this.baseUrl = baseUrl;
         this.username = username;
         this.password = password;

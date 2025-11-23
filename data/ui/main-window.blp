@@ -6,15 +6,17 @@ template $MainWindow: Adw.ApplicationWindow {
     default-width: 400;
     default-height: 350;
 
-    Adw.ToolbarView {
-        [top]
-        Adw.HeaderBar {
-            title-widget: Adw.ViewSwitcher {
-                stack: viewStack;
-                policy: wide;
-            };
-        }
+    Adw.ToastOverlay toastOverlay {
+        Adw.ToolbarView {
+            [top]
+            Adw.HeaderBar {
+                title-widget: Adw.ViewSwitcher {
+                    stack: viewStack;
+                    policy: wide;
+                };
+            }
 
-        Adw.ViewStack viewStack {}
+            Adw.ViewStack viewStack {}
+        }
     }
 }

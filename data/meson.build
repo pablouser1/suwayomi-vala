@@ -1,5 +1,11 @@
 subdir('ui')
 
+install_data(id + '.gschema.xml',
+  install_dir: join_paths(get_option('datadir'), 'glib-2.0/schemas')
+)
+
+gnome.compile_schemas(build_by_default: true)
+
 resources = gnome.compile_resources(
     'resources',
     'gresource.xml',
