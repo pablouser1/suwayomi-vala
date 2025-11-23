@@ -145,7 +145,7 @@ public class Api {
 
         Json.Parser response_parser = new Json.Parser();
         try {
-            response_parser.load_from_data(response_data);
+            response_parser.load_from_data(response_data, bytes.length);
         } catch (Error e) {
             throw new Error(Quark.from_string("JSON parse error"), 0, "Failed to parse GraphQL response: %s", e.message);
         }
