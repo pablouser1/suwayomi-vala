@@ -31,8 +31,7 @@ public class App : Adw.Application {
 
         this.api = new Api(baseUrl, username, password);
 
-        main_window = new MainWindow(this.api, this);
-
+        main_window = new MainWindow(this);
         main_window.present();
     }
 

@@ -9,9 +9,9 @@ public class MainWindow : Adw.ApplicationWindow {
     [GtkChild]
     private unowned Adw.ViewStack viewStack;
 
-    public MainWindow(Api api, Gtk.Application app) {
+    public MainWindow(App app) {
         Object(application: app);
-        this.api = api;
+        this.api = app.api;
 
         this.viewStack.notify["visible-child"].connect(this.on_page_changed);
         this.build_tabs.begin();
