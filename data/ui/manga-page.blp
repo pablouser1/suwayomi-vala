@@ -20,7 +20,21 @@ template $MangaPage: Adw.NavigationPage {
                 spacing: 10;
 
                 Gtk.Label titleLabel {
-                    label: "...";
+                    styles [
+                        "title-1",
+                    ]
+                }
+
+                Gtk.Label descriptionLabel {
+                    max-width-chars: 100;
+                    wrap: true;
+                    wrap-mode: word;
+                }
+
+                ScrolledWindow {
+                    vexpand: true;
+
+                    Gtk.ListBox chaptersBox {}
                 }
             }
         }

@@ -38,10 +38,7 @@ public class Api {
             var id = category_obj.get_int_member("id");
             var name = category_obj.get_string_member("name");
 
-            // Create the new CategoryType using the corrected constructor
             CategoryType category = new CategoryType(id, name);
-
-            // GLib.List requires reassignment when appending
             category_list.add(category);
         }
 
@@ -85,17 +82,14 @@ public class Api {
             var title = category_obj.get_string_member("title");
             var thumbnailUrl = category_obj.get_string_member("thumbnailUrl");
 
-            // Create the new CategoryType using the corrected constructor
             var manga = new MangaTypeBasic(id, title, thumbnailUrl);
-
-            // GLib.List requires reassignment when appending
             manga_list.add(manga);
         }
 
         return manga_list;
     }
 
-    public async MangaType manga(int64 id) throws Error {
+    public async MangaType manga(int64 manga_id) throws Error {
         var manga_query = @"
         query MangaFromId($$id: Int!) {
           manga(id: $$id) {
@@ -108,7 +102,7 @@ public class Api {
         ";
 
         var variables = new Json.Object();
-        variables.set_int_member("id", id);
+        variables.set_int_member("id", manga_id);
 
         var root_node = yield this.graphql(manga_query, variables);
         var data = this.data_from_res(root_node);
@@ -116,9 +110,69 @@ public class Api {
         var manga = data.get_object_member("manga");
 
         var title = manga.get_string_member("title");
+        var description = manga.get_string_member("description");
         var thumbnailUrl = manga.get_string_member("thumbnailUrl");
 
-        return new MangaType(id, title, thumbnailUrl);
+        return new MangaType(manga_id, title, description, thumbnailUrl);
+    }
+
+    public async Gee.List<ChapterType> chapters(int64 manga_id) throws Error {
+        var chapters_query = @"
+        query ChaptersFromMangaId($$condition: ChapterConditionInput, $$order: [ChapterOrderInput!]) {
+          chapters(
+            condition: $$condition
+            order: $$order
+          ) {
+            nodes {
+              id
+              name
+              isRead
+              lastPageRead
+              scanlator
+              uploadDate
+            }
+          }
+        }
+        ";
+
+        // Condition
+        var condition = new Json.Object();
+        condition.set_int_member("mangaId", manga_id);
+
+        // Order
+        var orderObj = new Json.Object();
+        orderObj.set_string_member("by", "SOURCE_ORDER");
+        orderObj.set_string_member("byType", "DESC");
+        var order = new Json.Array();
+        order.add_object_element(orderObj);
+
+        // Variables
+        var variables = new Json.Object();
+        variables.set_object_member("condition", condition);
+        variables.set_object_member("order", orderObj);
+
+        var root_node = yield this.graphql(chapters_query, variables);
+        var data = this.data_from_res(root_node);
+
+        var chapters_obj = data.get_object_member("chapters");
+        var nodes_array = chapters_obj.get_array_member("nodes");
+
+        Gee.List<ChapterType> chapter_list = new Gee.ArrayList<ChapterType> ();
+        for (int i = 0; i < nodes_array.get_length(); i++) {
+            Json.Object chapter_obj = nodes_array.get_element(i).get_object();
+
+            var id = chapter_obj.get_int_member("id");
+            var name = chapter_obj.get_string_member("name");
+            var isRead = chapter_obj.get_boolean_member("isRead");
+            var lastPageRead = chapter_obj.get_int_member("lastPageRead");
+            var scanlator = chapter_obj.get_string_member("scanlator");
+            var uploadDate = chapter_obj.get_string_member("uploadDate");
+
+            var chapter = new ChapterType(id, name, isRead, lastPageRead, scanlator, uploadDate);
+            chapter_list.add(chapter);
+        }
+
+        return chapter_list;
     }
 
     private async Json.Node graphql(string query, Json.Object? variables = null) throws Error {

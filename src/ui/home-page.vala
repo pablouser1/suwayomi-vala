@@ -1,7 +1,7 @@
 [GtkTemplate(ui = "/es/pablouser1/suwayomi/home-page.ui")]
-public class HomePage: Adw.NavigationPage {
+public class HomePage : Adw.NavigationPage {
     private Api api;
-    private Gee.Map<string, Tab> tabs = new Gee.HashMap<string, Tab>();
+    private Gee.Map<string, Tab> tabs = new Gee.HashMap<string, Tab> ();
 
     private unowned Adw.NavigationView nav;
     private unowned Adw.ToastOverlay toastOverlay;
@@ -26,11 +26,7 @@ public class HomePage: Adw.NavigationPage {
                 var container = new Gtk.FlowBox();
 
                 this.tabs.set(category.id.to_string(), new Tab(category.id, container));
-                this.viewStack.add_titled(
-                    container,
-                    category.id.to_string(),
-                    category.name
-                );
+                this.viewStack.add_titled(container, category.id.to_string(), category.name);
             }
         } catch (Error e) {
             this.toastOverlay.add_toast(new Adw.Toast(e.message));
@@ -61,6 +57,7 @@ public class HomePage: Adw.NavigationPage {
                 box.append(label);
                 try {
                     var bytes = yield api.image(manga.thumbnailUrl);
+
                     var texture = Gdk.Texture.from_bytes(bytes);
                     picture.set_paintable(texture);
                     tab.child.append(box);
@@ -80,14 +77,14 @@ public class HomePage: Adw.NavigationPage {
         var child = this.viewStack.visible_child;
         if (child != null) {
             // Get the specific page object to access properties like 'title'
-            var page = this.viewStack.get_page (child);
-            print ("Switched to view: %s (%s)\n", page.name, page.title);
+            var page = this.viewStack.get_page(child);
+            print("Switched to view: %s (%s)\n", page.name, page.title);
 
             if (this.tabs.has_key(page.name)) {
                 var tab = this.tabs.get(page.name);
 
                 if (!tab.fetched) {
-                   this.fetch_mangas_from_category.begin(tab);
+                    this.fetch_mangas_from_category.begin(tab);
                 }
             }
         }
