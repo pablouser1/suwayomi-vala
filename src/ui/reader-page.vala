@@ -54,12 +54,12 @@ public class ReaderPage : Adw.NavigationPage {
     }
 
     private async void fetch_page(int index, Gtk.Picture picture) {
-        var page = this.items.get((int) index);
+        var page = this.items.get(index);
         try {
             var bytes = yield this.api.image(page);
             var texture = Gdk.Texture.from_bytes(bytes);
             picture.set_paintable(texture);
-            this.fetched.add((int) index);
+            this.fetched.add(index);
         } catch (Error e) {
             this.toastOverlay.add_toast(new Adw.Toast(e.message));
         }
