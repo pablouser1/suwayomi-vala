@@ -49,11 +49,26 @@ public class MangaPage : Adw.NavigationPage {
             var chapters = yield this.api.chapters(manga_id);
 
             foreach (var chapter in chapters) {
-                var child = new Gtk.Label(chapter.name);
+                var child = new Adw.ActionRow();
+                child.set_title(Markup.escape_text(chapter.name, chapter.name.length));
+                child.set_subtitle(Markup.escape_text(chapter.scanlator, chapter.scanlator.length));
+                if (chapter.isRead) {
+                    child.add_suffix(new Gtk.Label("READ"));
+                }
+
+                child.set_activatable(true);
+                child.activated.connect(() => {
+                    this.on_chapter_clicked(manga_id, chapter.id);
+                });
+
                 this.chaptersBox.append(child);
             }
         } catch (Error e) {
             this.toastOverlay.add_toast(new Adw.Toast(e.message));
         }
+    }
+
+    private void on_chapter_clicked(int64 manga_id, int64 chapter_id) {
+        print("HII\n");
     }
 }
