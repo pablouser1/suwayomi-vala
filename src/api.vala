@@ -25,7 +25,6 @@ public class Api {
         ";
 
         var root_node = yield this.graphql(categories_query);
-
         var data = this.data_from_res(root_node);
 
         var categories_obj = data.get_object_member("categories");
@@ -49,7 +48,7 @@ public class Api {
         return category_list;
     }
 
-    public async Gee.List<MangaType> mangas_from_category(int64 category_id) throws Error {
+    public async Gee.List<MangaTypeBasic> mangas_from_category(int64 category_id) throws Error {
         var mangas_query = @"
         query MangasFromCategories($$condition: MangaConditionInput) {
           mangas(condition: $$condition) {
@@ -78,7 +77,7 @@ public class Api {
         var nodes_array = mangas_obj.get_array_member("nodes");
 
         // Get mangas
-        Gee.List<MangaType> manga_list = new Gee.ArrayList<MangaType> ();
+        Gee.List<MangaTypeBasic> manga_list = new Gee.ArrayList<MangaTypeBasic> ();
         for (int i = 0; i < nodes_array.get_length(); i++) {
             Json.Object category_obj = nodes_array.get_element(i).get_object();
 
@@ -87,13 +86,39 @@ public class Api {
             var thumbnailUrl = category_obj.get_string_member("thumbnailUrl");
 
             // Create the new CategoryType using the corrected constructor
-            var manga = new MangaType(id, title, thumbnailUrl);
+            var manga = new MangaTypeBasic(id, title, thumbnailUrl);
 
             // GLib.List requires reassignment when appending
             manga_list.add(manga);
         }
 
         return manga_list;
+    }
+
+    public async MangaType manga(int64 id) throws Error {
+        var manga_query = @"
+        query MangaFromId($$id: Int!) {
+          manga(id: $$id) {
+            title
+            description
+            thumbnailUrl
+            genre
+          }
+        }
+        ";
+
+        var variables = new Json.Object();
+        variables.set_int_member("id", id);
+
+        var root_node = yield this.graphql(manga_query, variables);
+        var data = this.data_from_res(root_node);
+
+        var manga = data.get_object_member("manga");
+
+        var title = manga.get_string_member("title");
+        var thumbnailUrl = manga.get_string_member("thumbnailUrl");
+
+        return new MangaType(id, title, thumbnailUrl);
     }
 
     private async Json.Node graphql(string query, Json.Object? variables = null) throws Error {

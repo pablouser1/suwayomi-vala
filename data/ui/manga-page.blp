@@ -1,0 +1,28 @@
+using Gtk 4.0;
+using Adw 1;
+
+template $MangaPage: Adw.NavigationPage {
+    title: "Manga";
+
+    Adw.ToolbarView {
+        [top]
+        Adw.HeaderBar {}
+
+        Gtk.Box {
+            homogeneous: true;
+            orientation: horizontal;
+            spacing: 10;
+
+            Gtk.Picture thumbnail {}
+
+            Gtk.Box {
+                orientation: vertical;
+                spacing: 10;
+
+                Gtk.Label titleLabel {
+                    label: "...";
+                }
+            }
+        }
+    }
+}

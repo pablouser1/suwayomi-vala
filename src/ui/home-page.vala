@@ -94,6 +94,7 @@ public class HomePage: Adw.NavigationPage {
     }
 
     private void on_manga_clicked(int64 manga_id) {
-        print("%s\n", manga_id.to_string());
+        var manga = new MangaPage(manga_id, this.api, this.nav, this.toastOverlay);
+        this.nav.push(manga);
     }
 }
