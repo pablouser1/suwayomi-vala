@@ -58,7 +58,7 @@ public class MangaPage : Adw.NavigationPage {
 
                 child.set_activatable(true);
                 child.activated.connect(() => {
-                    this.on_chapter_clicked(manga_id, chapter.id);
+                    this.on_chapter_clicked(chapter.id, chapter.lastPageRead);
                 });
 
                 this.chaptersBox.append(child);
@@ -68,8 +68,8 @@ public class MangaPage : Adw.NavigationPage {
         }
     }
 
-    private void on_chapter_clicked(int64 manga_id, int64 chapter_id) {
-        var page = new ReaderPage(manga_id, chapter_id, this.api, this.nav, this.toastOverlay);
+    private void on_chapter_clicked(int64 chapter_id, int64 lastPageRead) {
+        var page = new ReaderPage(chapter_id, lastPageRead, this.api, this.nav, this.toastOverlay);
         this.nav.push(page);
     }
 }

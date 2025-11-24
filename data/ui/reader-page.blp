@@ -9,5 +9,10 @@ template $ReaderPage: Adw.NavigationPage {
         Adw.HeaderBar {}
 
         Adw.Carousel carousel {}
+
+        [bottom]
+        Adw.CarouselIndicatorDots {
+            carousel: carousel;
+        }
     }
 }

@@ -24,8 +24,7 @@ public class Api {
         }
         ";
 
-        var root_node = yield this.graphql(categories_query);
-        var data = this.data_from_res(root_node);
+        var data = yield this.graphql(categories_query);
 
         var categories_obj = data.get_object_member("categories");
         var nodes_array = categories_obj.get_array_member("nodes");
@@ -67,8 +66,7 @@ public class Api {
         var variables = new Json.Object();
         variables.set_object_member("condition", condition);
 
-        var root_node = yield this.graphql(mangas_query, variables);
-        var data = this.data_from_res(root_node);
+        var data = yield this.graphql(mangas_query, variables);
 
         var mangas_obj = data.get_object_member("mangas");
         var nodes_array = mangas_obj.get_array_member("nodes");
@@ -104,8 +102,7 @@ public class Api {
         var variables = new Json.Object();
         variables.set_int_member("id", manga_id);
 
-        var root_node = yield this.graphql(manga_query, variables);
-        var data = this.data_from_res(root_node);
+        var data = yield this.graphql(manga_query, variables);
 
         var manga = data.get_object_member("manga");
 
@@ -151,8 +148,7 @@ public class Api {
         variables.set_object_member("condition", condition);
         variables.set_object_member("order", orderObj);
 
-        var root_node = yield this.graphql(chapters_query, variables);
-        var data = this.data_from_res(root_node);
+        var data = yield this.graphql(chapters_query, variables);
 
         var chapters_obj = data.get_object_member("chapters");
         var nodes_array = chapters_obj.get_array_member("nodes");
@@ -175,7 +171,35 @@ public class Api {
         return chapter_list;
     }
 
-    private async Json.Node graphql(string query, Json.Object? variables = null) throws Error {
+    public async Gee.List<string> pages_from_chapter(int64 chapter_id) throws Error {
+        var pages_query = @"
+        mutation PagesFromChapter($$input: FetchChapterPagesInput!) {
+          fetchChapterPages(input: $$input) {
+            pages
+          }
+        }
+        ";
+
+        var input = new Json.Object();
+        input.set_int_member("chapterId", chapter_id);
+        var variables = new Json.Object();
+        variables.set_object_member("input", input);
+
+        var data = yield this.graphql(pages_query, variables);
+        var fetch = data.get_object_member("fetchChapterPages");
+        var pages = fetch.get_array_member("pages");
+
+        var page_list = new Gee.ArrayList<string> ();
+        var elements = pages.get_elements();
+
+        foreach (var element in elements) {
+            page_list.add(element.get_string());
+        }
+
+        return page_list;
+    }
+
+    private async Json.Object graphql(string query, Json.Object? variables = null) throws Error {
         // Build final JSON
         Json.Builder builder = new Json.Builder();
         builder.begin_object();
@@ -229,7 +253,14 @@ public class Api {
             throw new Error(Quark.from_string("JSON parse error"), 0, "Failed to parse GraphQL response: %s", e.message);
         }
 
-        return response_parser.get_root();
+        var root_node = response_parser.get_root();
+        Json.Object root_obj = root_node.get_object();
+        if (!root_obj.has_member("data") || root_obj.get_member("data").get_node_type() != Json.NodeType.OBJECT) {
+            // Handle case where response has errors or unexpected structure
+            throw new Error(Quark.from_string("GraphQL error"), 0, "GraphQL response missing 'data' object.");
+        }
+
+        return root_obj.get_object_member("data");
     }
 
     public async Bytes image(string path) throws Error {
@@ -252,15 +283,6 @@ public class Api {
         }
 
         return bytes;
-    }
-
-    private Json.Object data_from_res(Json.Node root) throws Error {
-        Json.Object root_obj = root.get_object();
-        if (!root_obj.has_member("data") || root_obj.get_member("data").get_node_type() != Json.NodeType.OBJECT) {
-            // Handle case where response has errors or unexpected structure
-            throw new Error(Quark.from_string("GraphQL error"), 0, "GraphQL response missing 'data' object.");
-        }
-        return root_obj.get_object_member("data");
     }
 
     private string encode_basic_auth(string user, string pass) {
