@@ -7,19 +7,6 @@ template $MainWindow: Adw.ApplicationWindow {
     default-height: 350;
 
     Adw.ToastOverlay toastOverlay {
-        Adw.ToolbarView {
-            [top]
-            Adw.HeaderBar {}
-
-            ScrolledWindow {
-              Adw.ViewStack viewStack {}
-            }
-
-            [bottom]
-            Adw.ViewSwitcher {
-                stack: viewStack;
-                policy: narrow;
-            }
-        }
+        Adw.NavigationView nav {}
     }
 }

@@ -1,0 +1,21 @@
+using Gtk 4.0;
+using Adw 1;
+
+template $HomePage: Adw.NavigationPage {
+    title: "Suwayomi";
+
+    Adw.ToolbarView {
+        [top]
+        Adw.HeaderBar {}
+
+        ScrolledWindow {
+            Adw.ViewStack viewStack {}
+        }
+
+        [bottom]
+        Adw.ViewSwitcher {
+            stack: viewStack;
+            policy: narrow;
+        }
+    }
+}
