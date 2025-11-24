@@ -69,6 +69,7 @@ public class MangaPage : Adw.NavigationPage {
     }
 
     private void on_chapter_clicked(int64 manga_id, int64 chapter_id) {
-        print("HII\n");
+        var page = new ReaderPage(manga_id, chapter_id, this.api, this.nav, this.toastOverlay);
+        this.nav.push(page);
     }
 }
