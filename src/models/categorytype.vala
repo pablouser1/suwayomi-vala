@@ -1,8 +1,9 @@
-public class CategoryType: Object {
-    public int64 id { get; construct; }
-    public string name { get; construct; }
+public class CategoryType {
+    public int64 id;
+    public string name;
 
     public CategoryType(int64 id, string name) {
-        Object( id: id, name: name );
+        this.id = id;
+        this.name = name;
     }
 }

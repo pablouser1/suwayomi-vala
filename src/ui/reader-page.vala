@@ -25,13 +25,16 @@ public class ReaderPage : Adw.NavigationPage {
             var pages = yield this.api.pages_from_chapter(chapter_id);
 
             for (var i = 0; i < pages.size; i++) {
-                var picture = new Gtk.Picture();
-                picture.set_vexpand(true);
+                var picture = new Gtk.Picture() {
+                    vexpand = true
+                };
                 picture.set_content_fit(Gtk.ContentFit.CONTAIN);
 
-                var box = new Gtk.Box(Gtk.Orientation.VERTICAL, 10);
-                box.set_vexpand(true);
-                box.set_hexpand(true);
+                var box = new Gtk.Box(Gtk.Orientation.VERTICAL, 10) {
+                    vexpand = true,
+                    hexpand = true
+                };
+
                 box.append(picture);
                 this.carousel.append(box);
                 if (last_page_read == i + 1) {
