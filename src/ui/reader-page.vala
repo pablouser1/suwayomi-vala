@@ -28,9 +28,14 @@ public class ReaderPage : Adw.NavigationPage {
                 var picture = new Gtk.Picture();
                 picture.set_vexpand(true);
                 picture.set_content_fit(Gtk.ContentFit.CONTAIN);
-                this.carousel.append(picture);
+
+                var box = new Gtk.Box(Gtk.Orientation.VERTICAL, 10);
+                box.set_vexpand(true);
+                box.set_hexpand(true);
+                box.append(picture);
+                this.carousel.append(box);
                 if (last_page_read == i + 1) {
-                    this.carousel.scroll_to(picture, false);
+                    this.carousel.scroll_to(box, false);
                 }
             }
 
@@ -49,8 +54,8 @@ public class ReaderPage : Adw.NavigationPage {
             return;
         }
 
-        var picture = (Gtk.Picture) this.carousel.get_nth_page(index);
-        this.fetch_page.begin((int) index, picture);
+        var box = (Gtk.Box) this.carousel.get_nth_page(index);
+        this.fetch_page.begin((int) index, (Gtk.Picture) box.get_first_child());
     }
 
     private async void fetch_page(int index, Gtk.Picture picture) {
