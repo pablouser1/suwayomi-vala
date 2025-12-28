@@ -8,7 +8,9 @@ template $ReaderPage: Adw.NavigationPage {
         [top]
         Adw.HeaderBar {}
 
-        Adw.Carousel carousel {}
+        Adw.Carousel carousel {
+            focusable: true;
+        }
 
         [bottom]
         Adw.CarouselIndicatorDots {

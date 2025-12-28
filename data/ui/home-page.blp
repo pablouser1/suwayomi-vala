@@ -9,7 +9,9 @@ template $HomePage: Adw.NavigationPage {
         Adw.HeaderBar {}
 
         ScrolledWindow {
-            Adw.ViewStack viewStack {}
+            Adw.ViewStack viewStack {
+                enable-transitions: true;
+            }
         }
 
         [bottom]

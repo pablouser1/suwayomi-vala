@@ -18,6 +18,11 @@ public class ReaderPage : Adw.NavigationPage {
 
         this.carousel.page_changed.connect(this.on_page_changed);
         this.fetch_pages.begin(chapter_id, last_page_read);
+
+        var controller = new Gtk.EventControllerKey();
+        controller.key_pressed.connect(this.on_key_pressed);
+
+        this.carousel.add_controller(controller);
     }
 
     private async void fetch_pages(int64 chapter_id, int64 last_page_read) {
@@ -48,6 +53,25 @@ public class ReaderPage : Adw.NavigationPage {
         }
     }
 
+    private bool on_key_pressed(uint keyval, uint keycode, Gdk.ModifierType state) {
+        var currentPos = (uint) this.carousel.position;
+        var finalPos = currentPos;
+
+        if (keyval == Gdk.Key.Left && currentPos > 0) {
+            finalPos = currentPos - 1;
+        } else if (keyval == Gdk.Key.Right && currentPos < this.items.size) {
+            finalPos = currentPos + 1;
+        }
+
+        if (currentPos != finalPos) {
+            var box = (Gtk.Box) this.carousel.get_nth_page(finalPos);
+            this.carousel.scroll_to(box, true);
+            return true;
+        }
+
+        return false;
+    }
+
     private void on_page_changed(uint index) {
         if (index == -1 || index > this.items.size) {
             return;
@@ -65,6 +89,7 @@ public class ReaderPage : Adw.NavigationPage {
         var page = this.items.get(index);
         try {
             var bytes = yield this.api.image(page);
+
             var texture = Gdk.Texture.from_bytes(bytes);
             picture.set_paintable(texture);
             this.fetched.add(index);
