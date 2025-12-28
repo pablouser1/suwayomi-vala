@@ -9,14 +9,14 @@ template $HomePage: Adw.NavigationPage {
         Adw.HeaderBar {}
 
         ScrolledWindow {
-            Adw.ViewStack viewStack {
+            Adw.ViewStack view_stack {
                 enable-transitions: true;
             }
         }
 
         [bottom]
         Adw.ViewSwitcher {
-            stack: viewStack;
+            stack: view_stack;
             policy: narrow;
         }
     }
