@@ -56,7 +56,7 @@ public class HomePage : Adw.NavigationPage {
                 box.append (picture);
                 box.append (label);
                 try {
-                    var bytes = yield api.image (manga.thumbnail_url);
+                    var bytes = yield api.image (manga.id.to_string (), manga.thumbnail_url);
 
                     var texture = Gdk.Texture.from_bytes (bytes);
                     picture.set_paintable (texture);

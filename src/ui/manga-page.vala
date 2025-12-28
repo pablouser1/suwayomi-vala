@@ -30,7 +30,7 @@ public class MangaPage : Adw.NavigationPage {
             var manga = yield this.api.manga (manga_id);
 
             // Image
-            var bytes = yield api.image (manga.thumbnail_url);
+            var bytes = yield api.image (manga.id.to_string (), manga.thumbnail_url);
 
             var texture = Gdk.Texture.from_bytes (bytes);
             this.thumbnail.set_paintable (texture);
@@ -59,7 +59,7 @@ public class MangaPage : Adw.NavigationPage {
 
                 child.set_activatable (true);
                 child.activated.connect (() => {
-                    this.on_chapter_clicked (chapter.id, chapter.last_page_read);
+                    this.on_chapter_clicked (manga_id, chapter.id, chapter.last_page_read);
                 });
 
                 this.chapters_box.append (child);
@@ -69,8 +69,8 @@ public class MangaPage : Adw.NavigationPage {
         }
     }
 
-    private void on_chapter_clicked (int64 chapter_id, int64 last_page_read) {
-        var page = new ReaderPage (chapter_id, last_page_read, this.api, this.nav, this.toast_overlay);
+    private void on_chapter_clicked (int64 manga_id, int64 chapter_id, int64 last_page_read) {
+        var page = new ReaderPage (manga_id, chapter_id, last_page_read, this.api, this.nav, this.toast_overlay);
         this.nav.push (page);
     }
 }

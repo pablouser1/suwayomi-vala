@@ -2,6 +2,9 @@
 public class ReaderPage : Adw.NavigationPage {
     private Api api;
 
+    private int64 manga_id;
+    private int64 chapter_id;
+
     private unowned Adw.NavigationView nav;
     private unowned Adw.ToastOverlay toast_overlay;
 
@@ -12,12 +15,15 @@ public class ReaderPage : Adw.NavigationPage {
     private Gee.List<int> fetched = new Gee.ArrayList<int> ();
 
     public ReaderPage (
+        int64 manga_id,
         int64 chapter_id,
         int64 last_page_read,
         Api api,
         Adw.NavigationView nav,
         Adw.ToastOverlay toast_overlay
     ) {
+        this.manga_id = manga_id;
+        this.chapter_id = chapter_id;
         this.api = api;
         this.nav = nav;
         this.toast_overlay = toast_overlay;
@@ -94,7 +100,7 @@ public class ReaderPage : Adw.NavigationPage {
     private async void fetch_page (int index, Gtk.Picture picture) {
         var page = this.items.get (index);
         try {
-            var bytes = yield this.api.image (page);
+            var bytes = yield this.api.image ("%lli-%lli-%i".printf(this.manga_id, this.chapter_id, index), page);
 
             var texture = Gdk.Texture.from_bytes (bytes);
             picture.set_paintable (texture);

@@ -1,5 +1,6 @@
 public class Api {
     private Soup.Session session = new Soup.Session ();
+    private Cache cache = new Cache ();
     private string base_url;
     private string? username;
     private string? password;
@@ -268,7 +269,30 @@ public class Api {
         return root_obj.get_object_member ("data");
     }
 
-    public async Bytes image (string path) throws Error {
+    public async Bytes image (string id, string path) throws Error {
+        Bytes? bytes;
+        bool cached;
+
+        if (this.cache.exists (CacheType.IMAGES, id)) {
+            bytes = yield this.cache.fetch (CacheType.IMAGES, id);
+            cached = true;
+        } else {
+            bytes = yield this.fetch_image(path);
+            cached = false;
+        }
+
+        if (bytes == null) {
+            throw new Error (Quark.from_string ("Could not get data"), 0, "Body error");
+        }
+
+        if (!cached) {
+            this.cache.save.begin(CacheType.IMAGES, id, bytes);
+        }
+
+        return bytes;
+    }
+
+    private async Bytes? fetch_image(string path) throws Error {
         var message = new Soup.Message ("GET", this.base_url + path);
         // Handle auth
         if (this.username != null && this.password != null) {
@@ -281,10 +305,6 @@ public class Api {
         if (message.get_status () != Soup.Status.OK) {
             throw new Error (Soup.SessionError.quark (), 1, "HTTP Error %u: %s",
                              message.get_status (), message.get_reason_phrase ());
-        }
-
-        if (bytes == null) {
-            throw new Error (Quark.from_string ("Could not get data"), 0, "Body error");
         }
 
         return bytes;

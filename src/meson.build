@@ -9,12 +9,14 @@ deps = [
 sources = files(
     'api.vala',
     'app.vala',
+    'cache.vala',
 ) + configure_file(
     input: 'build.vala.in',
     output: 'build.vala',
     configuration: config
 )
 
+subdir('enums')
 subdir('models')
 subdir('ui')
 
