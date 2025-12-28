@@ -277,7 +277,7 @@ public class Api {
             bytes = yield this.cache.fetch (CacheType.IMAGES, id);
             cached = true;
         } else {
-            bytes = yield this.fetch_image(path);
+            bytes = yield this.fetch_image (path);
             cached = false;
         }
 
@@ -286,13 +286,13 @@ public class Api {
         }
 
         if (!cached) {
-            this.cache.save.begin(CacheType.IMAGES, id, bytes);
+            this.cache.save.begin (CacheType.IMAGES, id, bytes);
         }
 
         return bytes;
     }
 
-    private async Bytes? fetch_image(string path) throws Error {
+    private async Bytes? fetch_image (string path) throws Error {
         var message = new Soup.Message ("GET", this.base_url + path);
         // Handle auth
         if (this.username != null && this.password != null) {

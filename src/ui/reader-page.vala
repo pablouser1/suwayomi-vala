@@ -100,7 +100,7 @@ public class ReaderPage : Adw.NavigationPage {
     private async void fetch_page (int index, Gtk.Picture picture) {
         var page = this.items.get (index);
         try {
-            var bytes = yield this.api.image ("%lli-%lli-%i".printf(this.manga_id, this.chapter_id, index), page);
+            var bytes = yield this.api.image ("%lli-%lli-%i".printf (this.manga_id, this.chapter_id, index), page);
 
             var texture = Gdk.Texture.from_bytes (bytes);
             picture.set_paintable (texture);
