@@ -53,7 +53,8 @@ public class MangaPage : Adw.NavigationPage {
                 child.set_title(Markup.escape_text(chapter.name, chapter.name.length));
                 child.set_subtitle(Markup.escape_text(chapter.scanlator, chapter.scanlator.length));
                 if (chapter.isRead) {
-                    child.add_suffix(new Gtk.Label("READ"));
+                    var check_icon = new Gtk.Image.from_icon_name("object-select-symbolic");
+                    child.add_suffix(check_icon);
                 }
 
                 child.set_activatable(true);

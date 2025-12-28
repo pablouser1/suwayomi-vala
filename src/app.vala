@@ -33,6 +33,7 @@ public class App : Adw.Application {
 
         main_window = new MainWindow(this);
         main_window.present();
+        main_window.maximize();
     }
 
     public static int main(string[] args) {

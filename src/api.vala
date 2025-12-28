@@ -161,7 +161,7 @@ public class Api {
             var name = chapter_obj.get_string_member("name");
             var isRead = chapter_obj.get_boolean_member("isRead");
             var lastPageRead = chapter_obj.get_int_member("lastPageRead");
-            var scanlator = chapter_obj.get_string_member("scanlator");
+            var scanlator = chapter_obj.get_string_member_with_default("scanlator", "??");
             var uploadDate = chapter_obj.get_string_member("uploadDate");
 
             var chapter = new ChapterType(id, name, isRead, lastPageRead, scanlator, uploadDate);
