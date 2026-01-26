@@ -8,7 +8,7 @@ template $PreferencesDialog: Adw.PreferencesDialog {
         Adw.PreferencesGroup {
             title: "Server";
 
-            Adw.EntryRow {
+            Adw.EntryRow url_input {
                 title: "Url";
             }
         }
@@ -16,7 +16,7 @@ template $PreferencesDialog: Adw.PreferencesDialog {
         Adw.PreferencesGroup {
             title: "Authentication";
 
-            Adw.ComboRow {
+            Adw.ComboRow mode_input {
                 title: "Mode";
 
                 model: Gtk.StringList {
@@ -24,11 +24,11 @@ template $PreferencesDialog: Adw.PreferencesDialog {
                 };
             }
 
-            Adw.EntryRow {
+            Adw.EntryRow username_input {
                 title: "Username";
             }
 
-            Adw.PasswordEntryRow {
+            Adw.PasswordEntryRow password_input {
                 title: "Password";
             }
         }
