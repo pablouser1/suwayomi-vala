@@ -273,8 +273,8 @@ public class Api {
         Bytes? bytes;
         bool cached;
 
-        if (this.cache.exists (CacheType.IMAGES, id)) {
-            bytes = yield this.cache.fetch (CacheType.IMAGES, id);
+        if (this.cache.exists (id)) {
+            bytes = yield this.cache.fetch (id);
             cached = true;
         } else {
             bytes = yield this.fetch_image (path);
@@ -286,7 +286,7 @@ public class Api {
         }
 
         if (!cached) {
-            this.cache.save.begin (CacheType.IMAGES, id, bytes);
+            this.cache.save.begin (id, bytes);
         }
 
         return bytes;

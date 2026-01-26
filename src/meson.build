@@ -16,7 +16,6 @@ sources = files(
     configuration: config
 )
 
-subdir('enums')
 subdir('models')
 subdir('ui')
 

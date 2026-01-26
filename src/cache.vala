@@ -1,11 +1,13 @@
 public class Cache {
+    private string base_path;
+
     public Cache () {
-        this.create_folder_if_doesnt_exist (CacheType.IMAGES.base_path ());
-        this.create_folder_if_doesnt_exist (CacheType.JSON.base_path ());
+        this.base_path = Path.build_filename (GLib.Environment.get_user_cache_dir (), Build.ID);
+        this.create_folder_if_doesnt_exist ();
     }
 
-    public async Bytes? fetch (CacheType type, string filename) {
-        var file = File.new_for_path (Path.build_filename (type.base_path (), filename));
+    public async Bytes? fetch (string filename) {
+        var file = File.new_for_path(this.file_path(filename));
         try {
             uint8[] contents;
             yield file.load_contents_async (null, out contents, null);
@@ -16,12 +18,12 @@ public class Cache {
         }
     }
 
-    public bool exists (CacheType type, string filename) {
-        return FileUtils.test (Path.build_filename (type.base_path (), filename), FileTest.IS_REGULAR);
+    public bool exists (string filename) {
+        return FileUtils.test (this.file_path (filename), FileTest.IS_REGULAR);
     }
 
-    public async void save (CacheType type, string filename, Bytes data) {
-        var file = File.new_for_path (Path.build_filename (type.base_path (), filename));
+    public async void save (string filename, Bytes data) {
+        var file = File.new_for_path (this.file_path (filename));
         try {
             yield file.replace_contents_bytes_async (
                 data,
@@ -36,9 +38,13 @@ public class Cache {
         }
     }
 
-    private void create_folder_if_doesnt_exist (string path) {
-        if (!FileUtils.test (path, FileTest.IS_DIR)) {
-            DirUtils.create_with_parents (path, 0755);
+    private string file_path(string filename) {
+        return Path.build_filename (this.base_path, filename);
+    }
+
+    private void create_folder_if_doesnt_exist () {
+        if (!FileUtils.test (this.base_path, FileTest.IS_DIR)) {
+            DirUtils.create_with_parents (this.base_path, 0755);
         }
     }
 }
