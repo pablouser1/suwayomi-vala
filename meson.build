@@ -27,8 +27,8 @@ if host_machine.system() == 'windows'
 	dist_script_conf.set_quoted('EXECUTABLE_NAME', output)
 
 	dist_script = configure_file(
-		input: 'build-aux/win_dist.sh.in',
-		output: 'win_dist.sh',
+		input: 'dist/win/win_dist.sh.in',
+		output: 'dist/win/win_dist.sh',
 		configuration: dist_script_conf
 	)
 
@@ -50,7 +50,7 @@ if host_machine.system() == 'windows'
 	installer_conf.set('PROJECT_VERSION', version)
 
 	installer = configure_file(
-		input: 'build-aux/installer.nsi.in',
+		input: 'dist/win/installer.nsi.in',
 		output: 'installer.nsi',
 		configuration: installer_conf
 	)
