@@ -5,6 +5,7 @@
         <file alias="home-page.ui" preprocess="xml-stripblanks">ui/home-page.ui</file>
         <file alias="main-window.ui" preprocess="xml-stripblanks">ui/main-window.ui</file>
         <file alias="manga-page.ui" preprocess="xml-stripblanks">ui/manga-page.ui</file>
+        <file alias="preferences-dialog.ui" preprocess="xml-stripblanks">ui/preferences-dialog.ui</file>
         <file alias="reader-page.ui" preprocess="xml-stripblanks">ui/reader-page.ui</file>
     </gresource>
 </gresources>

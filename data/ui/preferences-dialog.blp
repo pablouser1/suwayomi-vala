@@ -1,0 +1,36 @@
+using Gtk 4.0;
+using Adw 1;
+
+template $PreferencesDialog: Adw.PreferencesDialog {
+    Adw.PreferencesPage {
+        title: "Instance";
+
+        Adw.PreferencesGroup {
+            title: "Server";
+
+            Adw.EntryRow {
+                title: "Url";
+            }
+        }
+
+        Adw.PreferencesGroup {
+            title: "Authentication";
+
+            Adw.ComboRow {
+                title: "Mode";
+
+                model: Gtk.StringList {
+                    strings: ["none", "basic"];
+                };
+            }
+
+            Adw.EntryRow {
+                title: "Username";
+            }
+
+            Adw.PasswordEntryRow {
+                title: "Password";
+            }
+        }
+    }
+}

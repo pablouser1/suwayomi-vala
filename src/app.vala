@@ -24,10 +24,7 @@ public class App : Adw.Application {
             return;
         }
 
-        // Actions
-        var about_action = new SimpleAction("about", null);
-        about_action.activate.connect (this.on_about_activated);
-        this.add_action (about_action);
+        this.setup_actions ();
 
         this.settings = new Settings (Build.ID);
         var base_url = settings.get_string ("url");
@@ -47,9 +44,26 @@ public class App : Adw.Application {
         return app.run (args);
     }
 
+    private void setup_actions () {
+        // Preferences
+        var prefs_action = new SimpleAction("preferences", null);
+        prefs_action.activate.connect (this.on_preferences_activated);
+        this.add_action (prefs_action);
+
+        // About
+        var about_action = new SimpleAction("about", null);
+        about_action.activate.connect (this.on_about_activated);
+        this.add_action (about_action);
+    }
+
     private string ? get_optional_string (string key) {
         string value = this.settings.get_string (key);
         return value == "" ? null : value;
+    }
+
+    private void on_preferences_activated (SimpleAction action, Variant? parameter) {
+        var prefs = new PreferencesDialog (this.settings);
+        prefs.present (main_window);
     }
 
     private void on_about_activated (SimpleAction action, Variant? parameter) {
