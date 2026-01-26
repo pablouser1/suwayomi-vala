@@ -1,12 +1,38 @@
 using Gtk 4.0;
 using Adw 1;
 
+menu primary_menu {
+    section {
+        item {
+            label: "Preferences";
+            action: "app.preferences";
+        }
+
+        item {
+            label: "Keyboard Shortcuts";
+            action: "win.show-help-overlay";
+        }
+
+        item {
+            label: "About";
+            action: "app.about";
+        }
+    }
+}
+
 template $HomePage: Adw.NavigationPage {
     title: "Suwayomi";
 
     Adw.ToolbarView {
         [top]
-        Adw.HeaderBar {}
+        Adw.HeaderBar {
+            [end]
+            Gtk.MenuButton {
+                primary: true;
+                icon-name: "open-menu-symbolic";
+                menu-model: primary_menu;
+            }
+        }
 
         ScrolledWindow {
             Adw.ViewStack view_stack {
