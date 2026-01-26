@@ -17,6 +17,7 @@ gnome = import('gnome')
 
 config = configuration_data()
 config.set('ID', id)
+config.set('VERSION', version)
 
 subdir('data')
 subdir('src')

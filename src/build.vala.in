@@ -1,3 +1,4 @@
 namespace Build {
     public const string ID = "@ID@";
+    public const string VERSION = "@VERSION@";
 }

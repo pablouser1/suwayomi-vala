@@ -24,6 +24,11 @@ public class App : Adw.Application {
             return;
         }
 
+        // Actions
+        var about_action = new SimpleAction("about", null);
+        about_action.activate.connect (this.on_about_activated);
+        this.add_action (about_action);
+
         this.settings = new Settings (Build.ID);
         var base_url = settings.get_string ("url");
         var username = this.get_optional_string ("username");
@@ -45,5 +50,23 @@ public class App : Adw.Application {
     private string ? get_optional_string (string key) {
         string value = this.settings.get_string (key);
         return value == "" ? null : value;
+    }
+
+    private void on_about_activated (SimpleAction action, Variant? parameter) {
+        var about = new Adw.AboutDialog () {
+            // Basic Metadata
+            application_name = "Suwayomi Vala",
+            application_icon = Build.ID,
+            version = Build.VERSION,
+            
+            // Links
+            website = "https://github.com/pablouser1/suwaoymi-vala",
+            issue_url = "https://github.com/pablouser1/suwaoymi-vala/issues",
+            
+            // Legal & Credits
+            license_type = Gtk.License.GPL_3_0,
+        };
+
+        about.present (main_window);
     }
 }
