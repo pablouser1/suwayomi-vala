@@ -1,6 +1,6 @@
 [GtkTemplate (ui = "/es/pablouser1/suwayomi/main-window.ui")]
 public class MainWindow : Adw.ApplicationWindow {
-    private Api api;
+    private DataFetch data_fetch;
 
     [GtkChild]
     private unowned Adw.ToastOverlay toast_overlay;
@@ -10,13 +10,13 @@ public class MainWindow : Adw.ApplicationWindow {
 
     public MainWindow (App app) {
         Object (application: app);
-        this.api = app.api;
+        this.data_fetch = app.data_fetch;
 
         this.build_home ();
     }
 
     private void build_home () {
-        var home = new HomePage (this.api, this.nav, this.toast_overlay);
+        var home = new HomePage (this.data_fetch, this.nav, this.toast_overlay);
         nav.push (home);
     }
 }

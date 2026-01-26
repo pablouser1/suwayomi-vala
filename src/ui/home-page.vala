@@ -1,6 +1,6 @@
 [GtkTemplate (ui = "/es/pablouser1/suwayomi/home-page.ui")]
 public class HomePage : Adw.NavigationPage {
-    private Api api;
+    private DataFetch data_fetch;
     private Gee.Map<string, Tab> tabs = new Gee.HashMap<string, Tab> ();
 
     private unowned Adw.NavigationView nav;
@@ -9,8 +9,8 @@ public class HomePage : Adw.NavigationPage {
     [GtkChild]
     private unowned Adw.ViewStack view_stack;
 
-    public HomePage (Api api, Adw.NavigationView nav, Adw.ToastOverlay toast_overlay) {
-        this.api = api;
+    public HomePage (DataFetch data_fetch, Adw.NavigationView nav, Adw.ToastOverlay toast_overlay) {
+        this.data_fetch = data_fetch;
         this.nav = nav;
         this.toast_overlay = toast_overlay;
 
@@ -20,7 +20,7 @@ public class HomePage : Adw.NavigationPage {
 
     private async void build_tabs () {
         try {
-            var categories = yield this.api.categories ();
+            var categories = yield this.data_fetch.categories ();
 
             foreach (var category in categories) {
                 var container = new Gtk.FlowBox ();
@@ -35,7 +35,7 @@ public class HomePage : Adw.NavigationPage {
 
     private async void fetch_mangas_from_category (Tab tab) {
         try {
-            var mangas_category = yield this.api.mangas_from_category (tab.id);
+            var mangas_category = yield this.data_fetch.mangas_from_category (tab.id);
 
             foreach (var manga in mangas_category) {
                 var picture = new Gtk.Picture ();
@@ -56,7 +56,7 @@ public class HomePage : Adw.NavigationPage {
                 box.append (picture);
                 box.append (label);
                 try {
-                    var bytes = yield api.image (manga.id.to_string (), manga.thumbnail_url);
+                    var bytes = yield data_fetch.image (manga.id.to_string (), manga.thumbnail_url);
 
                     var texture = Gdk.Texture.from_bytes (bytes);
                     picture.set_paintable (texture);
@@ -91,7 +91,7 @@ public class HomePage : Adw.NavigationPage {
     }
 
     private void on_manga_clicked (int64 manga_id) {
-        var manga = new MangaPage (manga_id, this.api, this.nav, this.toast_overlay);
+        var manga = new MangaPage (manga_id, this.data_fetch, this.nav, this.toast_overlay);
         this.nav.push (manga);
     }
 }

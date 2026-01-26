@@ -1,6 +1,6 @@
 [GtkTemplate (ui = "/es/pablouser1/suwayomi/reader-page.ui")]
 public class ReaderPage : Adw.NavigationPage {
-    private Api api;
+    private DataFetch data_fetch;
 
     private int64 manga_id;
     private int64 chapter_id;
@@ -18,13 +18,13 @@ public class ReaderPage : Adw.NavigationPage {
         int64 manga_id,
         int64 chapter_id,
         int64 last_page_read,
-        Api api,
+        DataFetch data_fetch,
         Adw.NavigationView nav,
         Adw.ToastOverlay toast_overlay
     ) {
         this.manga_id = manga_id;
         this.chapter_id = chapter_id;
-        this.api = api;
+        this.data_fetch = data_fetch;
         this.nav = nav;
         this.toast_overlay = toast_overlay;
 
@@ -39,7 +39,7 @@ public class ReaderPage : Adw.NavigationPage {
 
     private async void fetch_pages (int64 chapter_id, int64 last_page_read) {
         try {
-            var pages = yield this.api.pages_from_chapter (chapter_id);
+            var pages = yield this.data_fetch.pages_from_chapter (chapter_id);
 
             for (var i = 0; i < pages.size; i++) {
                 var picture = new Gtk.Picture () {
@@ -100,7 +100,7 @@ public class ReaderPage : Adw.NavigationPage {
     private async void fetch_page (int index, Gtk.Picture picture) {
         var page = this.items.get (index);
         try {
-            var bytes = yield this.api.image ("%lli-%lli-%i".printf (this.manga_id, this.chapter_id, index), page);
+            var bytes = yield this.data_fetch.image ("%lli-%lli-%i".printf (this.manga_id, this.chapter_id, index), page);
 
             var texture = Gdk.Texture.from_bytes (bytes);
             picture.set_paintable (texture);

@@ -6,16 +6,11 @@ public class Cache {
         this.create_folder_if_doesnt_exist ();
     }
 
-    public async Bytes? fetch (string filename) {
+    public async Bytes fetch (string filename) throws Error {
         var file = File.new_for_path(this.file_path(filename));
-        try {
-            uint8[] contents;
-            yield file.load_contents_async (null, out contents, null);
-
-            return new Bytes (contents);
-        } catch (Error e) {
-            return null;
-        }
+        uint8[] contents;
+        yield file.load_contents_async (null, out contents, null);
+        return new Bytes (contents);
     }
 
     public bool exists (string filename) {

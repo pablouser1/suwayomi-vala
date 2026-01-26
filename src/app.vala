@@ -1,7 +1,7 @@
 public class App : Adw.Application {
     public MainWindow main_window;
     public Settings settings;
-    public Api api;
+    public DataFetch data_fetch;
 
     private static App _instance;
     public static App instance {
@@ -31,7 +31,7 @@ public class App : Adw.Application {
         var username = this.get_optional_string ("username");
         var password = this.get_optional_string ("password");
 
-        this.api = new Api (base_url, username, password);
+        this.data_fetch = new DataFetch (base_url, username, password);
 
         main_window = new MainWindow (this);
         main_window.present ();

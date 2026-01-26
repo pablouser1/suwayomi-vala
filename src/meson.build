@@ -4,12 +4,15 @@ deps = [
     dependency('libsoup-3.0'),
     dependency('json-glib-1.0'),
     dependency('gee-0.8'),
+    dependency('sqlite3'),
 ]
 
 sources = files(
     'api.vala',
     'app.vala',
     'cache.vala',
+    'datafetch.vala',
+    'db.vala',
 ) + configure_file(
     input: 'build.vala.in',
     output: 'build.vala',

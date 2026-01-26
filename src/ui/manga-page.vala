@@ -1,6 +1,6 @@
 [GtkTemplate (ui = "/es/pablouser1/suwayomi/manga-page.ui")]
 public class MangaPage : Adw.NavigationPage {
-    private Api api;
+    private DataFetch data_fetch;
 
     private unowned Adw.NavigationView nav;
     private unowned Adw.ToastOverlay toast_overlay;
@@ -17,8 +17,8 @@ public class MangaPage : Adw.NavigationPage {
     [GtkChild]
     private unowned Gtk.ListBox chapters_box;
 
-    public MangaPage (int64 manga_id, Api api, Adw.NavigationView nav, Adw.ToastOverlay toast_overlay) {
-        this.api = api;
+    public MangaPage (int64 manga_id, DataFetch data_fetch, Adw.NavigationView nav, Adw.ToastOverlay toast_overlay) {
+        this.data_fetch = data_fetch;
         this.nav = nav;
         this.toast_overlay = toast_overlay;
         this.fetch_details.begin (manga_id);
@@ -27,10 +27,10 @@ public class MangaPage : Adw.NavigationPage {
 
     private async void fetch_details (int64 manga_id) {
         try {
-            var manga = yield this.api.manga (manga_id);
+            var manga = yield this.data_fetch.manga (manga_id);
 
             // Image
-            var bytes = yield api.image (manga.id.to_string (), manga.thumbnail_url);
+            var bytes = yield this.data_fetch.image (manga.id.to_string (), manga.thumbnail_url);
 
             var texture = Gdk.Texture.from_bytes (bytes);
             this.thumbnail.set_paintable (texture);
@@ -46,7 +46,7 @@ public class MangaPage : Adw.NavigationPage {
 
     private async void fetch_chapters (int64 manga_id) {
         try {
-            var chapters = yield this.api.chapters (manga_id);
+            var chapters = yield this.data_fetch.chapters (manga_id);
 
             foreach (var chapter in chapters) {
                 var child = new Adw.ActionRow ();
@@ -70,7 +70,7 @@ public class MangaPage : Adw.NavigationPage {
     }
 
     private void on_chapter_clicked (int64 manga_id, int64 chapter_id, int64 last_page_read) {
-        var page = new ReaderPage (manga_id, chapter_id, last_page_read, this.api, this.nav, this.toast_overlay);
+        var page = new ReaderPage (manga_id, chapter_id, last_page_read, this.data_fetch, this.nav, this.toast_overlay);
         this.nav.push (page);
     }
 }
