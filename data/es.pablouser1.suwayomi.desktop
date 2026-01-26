@@ -1,0 +1,8 @@
+[Desktop Entry]
+Name=Suwayomi
+Comment=Browse and read manga from your Suwayomi server
+Exec=suwayomi %U
+Terminal=false
+Type=Application
+Categories=GTK;Graphics;Viewer;
+Keywords=Manga;Anime;Reader;Suwayomi;

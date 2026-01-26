@@ -1,0 +1,29 @@
+# Maintainer: Pablo Ferreiro <contact@pabloferreiro.es>
+pkgname=suwayomi-vala-git
+pkgver=1.0
+pkgrel=1
+pkgdesc="A desktop client for Suwayomi, written in Vala"
+arch=('x86_64')
+url="https://github.com/pablouser1/suwayomi-vala"
+license=('GPL3')
+depends=('gtk4' 'libadwaita' 'libsoup3' 'json-glib' 'libgee')
+makedepends=('meson' 'vala' 'gcc' 'git' 'grep' 'blueprint-compiler' 'jq')
+source=('suwayomi-vala::git+https://github.com/pablouser1/suwayomi-vala.git')
+sha256sums=('SKIP')
+
+pkgver() {
+    cd "$srcdir/suwayomi-vala"
+    
+    local _ver=$(meson introspect meson.build --projectinfo | jq -r '.version')
+    local _hash=$(git rev-parse --short HEAD)
+    echo "$_ver.$_hash"
+}
+
+build() {
+    arch-meson suwayomi-vala build
+    meson compile -C build
+}
+
+package() {
+    DESTDIR="$pkgdir" meson install -C build
+}

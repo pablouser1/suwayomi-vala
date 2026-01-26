@@ -4,6 +4,11 @@ install_data(id + '.gschema.xml',
   install_dir: join_paths(get_option('datadir'), 'glib-2.0/schemas')
 )
 
+install_data(
+  'es.pablouser1.suwayomi.desktop',
+  install_dir: join_paths(get_option('datadir'), 'applications')
+)
+
 gnome.compile_schemas(build_by_default: true)
 
 resources = gnome.compile_resources(
