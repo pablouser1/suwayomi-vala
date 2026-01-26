@@ -46,12 +46,12 @@ public class App : Adw.Application {
 
     private void setup_actions () {
         // Preferences
-        var prefs_action = new SimpleAction("preferences", null);
+        var prefs_action = new SimpleAction ("preferences", null);
         prefs_action.activate.connect (this.on_preferences_activated);
         this.add_action (prefs_action);
 
         // About
-        var about_action = new SimpleAction("about", null);
+        var about_action = new SimpleAction ("about", null);
         about_action.activate.connect (this.on_about_activated);
         this.add_action (about_action);
     }
@@ -72,11 +72,11 @@ public class App : Adw.Application {
             application_name = "Suwayomi Vala",
             application_icon = Build.ID,
             version = Build.VERSION,
-            
+
             // Links
             website = "https://github.com/pablouser1/suwaoymi-vala",
             issue_url = "https://github.com/pablouser1/suwaoymi-vala/issues",
-            
+
             // Legal & Credits
             license_type = Gtk.License.GPL_3_0,
         };
