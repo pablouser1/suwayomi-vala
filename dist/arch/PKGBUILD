@@ -15,8 +15,7 @@ pkgver() {
     cd "$srcdir/suwayomi-vala"
     
     local _ver=$(meson introspect meson.build --projectinfo | jq -r '.version')
-    local _hash=$(git rev-parse --short HEAD)
-    echo "$_ver.$_hash"
+    echo "$_ver"
 }
 
 build() {
