@@ -2,12 +2,12 @@ public class Cache {
     private string base_path;
 
     public Cache () {
-        this.base_path = Path.build_filename (GLib.Environment.get_user_cache_dir (), Build.ID);
-        this.create_folder_if_doesnt_exist ();
+        this.base_path = Storage.build_cache_folder ();
+        Storage.create_folder_if_doesnt_exist (this.base_path);
     }
 
     public async Bytes fetch (string filename) throws Error {
-        var file = File.new_for_path(this.file_path(filename));
+        var file = File.new_for_path (this.file_path (filename));
         uint8[] contents;
         yield file.load_contents_async (null, out contents, null);
         return new Bytes (contents);
@@ -33,13 +33,7 @@ public class Cache {
         }
     }
 
-    private string file_path(string filename) {
+    private string file_path (string filename) {
         return Path.build_filename (this.base_path, filename);
-    }
-
-    private void create_folder_if_doesnt_exist () {
-        if (!FileUtils.test (this.base_path, FileTest.IS_DIR)) {
-            DirUtils.create_with_parents (this.base_path, 0755);
-        }
     }
 }

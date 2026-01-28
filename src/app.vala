@@ -40,6 +40,8 @@ public class App : Adw.Application {
 
     public static int main (string[] args) {
         Intl.setlocale ();
+        Storage.create_folder_if_doesnt_exist (Storage.build_cache_folder ());
+        Storage.create_folder_if_doesnt_exist (Storage.build_data_folder ());
         var app = App.instance;
         return app.run (args);
     }

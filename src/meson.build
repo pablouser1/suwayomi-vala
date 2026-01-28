@@ -19,6 +19,7 @@ sources = files(
     configuration: config
 )
 
+subdir('helpers')
 subdir('models')
 subdir('ui')
 

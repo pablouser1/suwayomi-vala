@@ -1,14 +1,25 @@
 public class DataFetch {
     private Api api;
-    private Cache cache = new Cache();
-    private LocalDb db = new LocalDb();
+    private Cache cache = new Cache ();
+    private LocalDb db = new LocalDb ();
 
-    public DataFetch(string base_url, string? username, string? password) {
-        this.api = new Api(base_url, username, password);
+    public DataFetch (string base_url, string? username, string? password) {
+        this.api = new Api (base_url, username, password);
     }
 
-    public async Gee.List<CategoryType> categories () throws Error {
-        return yield api.categories();
+    public async Gee.List<CategoryType> categories (bool refresh = false) throws Error {
+        Gee.List<CategoryType>? data = null;
+
+        if (!refresh) {
+            data = db.get_categories ();
+        }
+
+        if (data == null || data.size == 0) {
+            data = yield api.categories ();
+            db.save_categories (data);
+        }
+
+        return data;
     }
 
     public async Gee.List<MangaTypeBasic> mangas_from_category (int64 category_id) throws Error {
