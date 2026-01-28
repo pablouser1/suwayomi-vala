@@ -1,3 +1,3 @@
-public class Db {
+public class LocalDb {
     private Sqlite.Database conn;
 }

@@ -1,7 +1,7 @@
 public class DataFetch {
     private Api api;
     private Cache cache = new Cache();
-    private Db db = new Db();
+    private LocalDb db = new LocalDb();
 
     public DataFetch(string base_url, string? username, string? password) {
         this.api = new Api(base_url, username, password);

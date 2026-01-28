@@ -12,7 +12,7 @@ sources = files(
     'app.vala',
     'cache.vala',
     'datafetch.vala',
-    'db.vala',
+    'localdb.vala',
 ) + configure_file(
     input: 'build.vala.in',
     output: 'build.vala',
