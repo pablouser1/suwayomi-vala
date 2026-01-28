@@ -31,13 +31,13 @@ public class LocalDb {
     }
 
     public void save_categories (Gee.List<CategoryType> data) throws Error {
-        string query = "INSERT INTO categories (id, name) VALUES ($ID, $NAME)";
+        string query = "REPLACE INTO categories (id, name) VALUES ($ID, $NAME)";
         int ec;
         Sqlite.Statement stmt;
 
         ec = this.conn.prepare_v2 (query, query.length, out stmt);
         if (ec != Sqlite.OK) {
-            throw new Error (Quark.from_string ("Could save categories"), this.conn.errcode(  ), this.conn.errmsg(  ));
+            throw new Error (Quark.from_string ("Could save categories"), this.conn.errcode (), this.conn.errmsg ());
         }
 
         int id_pos = stmt.bind_parameter_index ("$ID");
@@ -49,7 +49,7 @@ public class LocalDb {
             stmt.bind_text (name_pos, category.name);
 
             if (stmt.step () != Sqlite.DONE) {
-                throw new Error (Quark.from_string ("Could save categories"), this.conn.errcode(  ), this.conn.errmsg(  ));
+                throw new Error (Quark.from_string ("Could save categories"), this.conn.errcode (), this.conn.errmsg ());
             }
 
             stmt.reset ();
